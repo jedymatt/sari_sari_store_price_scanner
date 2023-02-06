@@ -1,16 +1,13 @@
-# sari_sari_store_price_scanner (WIP)
+# Sari-Sari Store Price (WIP)
 
-A new Flutter project.
+Built using flutter but for android mobile device.
 
-## Getting Started
+An android mobile application for determining the price of the products from the barcode. It is for small scale business like sari-sari store.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## To-Do Features
+- [ ] Use camera to detect barcode and redirect to price result or product screen.
+- [ ] Display list of products. 
+- [ ] Register product along with price option when a barcode does not exist in local storage.
+- [ ] Manage the products and prices screen.
+- [ ] Export and import file for backup and restore data.
+- [ ] (Optional and is only for convenience) Standalone static website for managing the products and prices, without backend. Utilizes import and export file. The exported file will be used to import in android application. 
