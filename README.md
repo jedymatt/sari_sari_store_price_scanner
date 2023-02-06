@@ -2,7 +2,7 @@
 
 Built using flutter but for android mobile device.
 
-An android mobile application for determining the price of the products from the barcode. It aims to aid small scale business like sari-sari store for tracking their price of products at their fingertips.
+An android mobile application for determining the price of the products from the barcode. It aims to aid small scale business like sari-sari store for tracking and managing their price of products at their fingertips.
 
 ## To-Do Features
 - [ ] Use camera to detect barcode and redirect to price result or product screen.
