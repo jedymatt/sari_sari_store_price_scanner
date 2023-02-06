@@ -1,4 +1,4 @@
-# sari_sari_price_scanner
+# sari_sari_store_price_scanner
 
 A new Flutter project.
 

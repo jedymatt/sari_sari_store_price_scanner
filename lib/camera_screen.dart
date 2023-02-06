@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import 'package:sari_sari_price_scanner/live_camera_preview.dart';
+import './live_camera_preview.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});

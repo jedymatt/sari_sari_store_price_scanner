@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jedymatt.sari_sari_price_scanner">
+    package="com.jedymatt.sari_sari_store_price_scanner">
    <application
-        android:label="sari_sari_price_scanner"
+        android:label="sari_sari_store_price_scanner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
