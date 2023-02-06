@@ -1,4 +1,4 @@
-# Sari-Sari Store Price (WIP)
+# Sari-Sari Store Price Scanner (WIP)
 
 Built using flutter but for android mobile device.
 
