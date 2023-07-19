@@ -28,6 +28,13 @@ class _LiveCameraPreviewState extends State<LiveCameraPreview> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+
+    _stopLiveFeed();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _body(),
@@ -64,6 +71,12 @@ class _LiveCameraPreviewState extends State<LiveCameraPreview> {
       _controller?.startImageStream(_processCameraImage);
       setState(() {});
     });
+  }
+
+  Future _stopLiveFeed() async {
+    await _controller?.stopImageStream();
+    await _controller?.dispose();
+    _controller = null;
   }
 
   Future _processCameraImage(CameraImage image) async {
