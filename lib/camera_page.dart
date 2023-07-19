@@ -1,6 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import 'package:sari_sari_store_price_scanner/price_result_screen.dart';
+import './camera_manager.dart';
 import './live_camera_preview.dart';
 
 class CameraPage extends StatefulWidget {
@@ -12,30 +14,21 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
-  late CameraDescription camera;
+  final CameraManager _cameraManager = Get.find<CameraManager>();
+  bool cameraPause = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _barcodeScanner.close();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CameraDescription>>(
-        future: availableCameras(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Container();
-          }
-
-          if (!snapshot.hasData) {
-            return Container();
-          }
-
-          camera = snapshot.data!.first;
-
-          return LiveCameraPreview(
-            camera: camera,
-            onImage: (inputImage) {
-              processImage(inputImage);
-            },
-          );
-        });
+    return LiveCameraPreview(
+      camera: _cameraManager.camera,
+      onImage: processImage,
+    );
   }
 
   Future processImage(InputImage inputImage) async {
@@ -43,7 +36,14 @@ class _CameraPageState extends State<CameraPage> {
 
     if (barcodes.isEmpty) return;
 
-    print(barcodes);
-    // TODO: If barcode is detected then move to PriceResultScreen.dart
+    if (!mounted) return;
+
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return PriceResultScreen(
+          barcodeValue: barcodes.first.rawValue!,
+        );
+      },
+    ));
   }
 }
