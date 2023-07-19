@@ -1,11 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:sari_sari_store_price_scanner/camera_page.dart';
+import 'package:get/get.dart';
+import './camera_page.dart';
+import './camera_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  print(await availableCameras());
+  final cameras = await availableCameras();
+  Get.put(CameraManager(camera: cameras.first));
   runApp(const MyApp());
 }
 
