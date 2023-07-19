@@ -7,10 +7,13 @@ class PriceResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Text(barcodeValue),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(barcodeValue),
+          ],
+        ),
       ),
     );
   }
