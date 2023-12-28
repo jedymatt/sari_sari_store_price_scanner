@@ -1,9 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import 'package:sari_sari_store_price_scanner/price_result_screen.dart';
-import './camera_manager.dart';
-import './live_camera_preview.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:sari_sari_store_price_scanner/result_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -13,37 +12,44 @@ class CameraPage extends StatefulWidget {
 }
 
 class _CameraPageState extends State<CameraPage> {
-  final BarcodeScanner _barcodeScanner = BarcodeScanner();
-  final CameraManager _cameraManager = Get.find<CameraManager>();
-  bool cameraPause = false;
+  MobileScannerController cameraController = MobileScannerController(
+    returnImage: true,
+    facing: CameraFacing.back,
+  );
+  bool hasResult = false;
 
   @override
   void dispose() {
     super.dispose();
-    _barcodeScanner.close();
+    cameraController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LiveCameraPreview(
-      camera: _cameraManager.camera,
-      onImage: processImage,
+    return Scaffold(
+      body: MobileScanner(
+        controller: cameraController,
+        startDelay: true,
+        onDetect: (capture) async {
+          final List<Barcode> barcodes = capture.barcodes;
+          final Uint8List? image = capture.image;
+          for (final barcode in barcodes) {
+            debugPrint('Barcode found! ${barcode.rawValue}');
+          }
+
+          await cameraController.stop();
+          if (!mounted) return;
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ResultPage(
+                barcodes: barcodes,
+                image: image,
+              ),
+            ),
+          );
+          await cameraController.start();
+        },
+      ),
     );
-  }
-
-  Future processImage(InputImage inputImage) async {
-    final barcodes = await _barcodeScanner.processImage(inputImage);
-
-    if (barcodes.isEmpty) return;
-
-    if (!mounted) return;
-
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) {
-        return PriceResultScreen(
-          barcodeValue: barcodes.first.rawValue!,
-        );
-      },
-    ));
   }
 }

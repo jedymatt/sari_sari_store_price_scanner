@@ -1,13 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import './camera_page.dart';
-import './camera_manager.dart';
+import 'package:sari_sari_store_price_scanner/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  Get.put(CameraManager(camera: cameras.first));
   runApp(const MyApp());
 }
 
@@ -23,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const CameraPage(),
+      home: const HomePage(),
     );
   }
 }
