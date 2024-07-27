@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'add_product_page.dart';
+
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key});
 
@@ -26,7 +28,12 @@ class ManageProductsPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddProductPage()),
+              );
+            },
           ),
         ],
       ),
