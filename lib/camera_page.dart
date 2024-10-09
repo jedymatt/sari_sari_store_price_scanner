@@ -29,7 +29,6 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       body: MobileScanner(
         controller: cameraController,
-        startDelay: true,
         onDetect: (capture) async {
           final List<Barcode> barcodes = capture.barcodes;
           final Uint8List? image = capture.image;
