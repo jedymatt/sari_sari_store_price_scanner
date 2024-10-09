@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sari_sari_store_price_scanner/result_page.dart';
+import 'package:sari_scan/result_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
