@@ -1,4 +1,4 @@
-package com.jedymatt.sari_sari_store_price_scanner
+package dev.jedymatt.sari_scan
 
 import io.flutter.embedding.android.FlutterActivity
 
