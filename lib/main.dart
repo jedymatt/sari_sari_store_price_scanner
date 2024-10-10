@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sari_sari_store_price_scanner/home_page.dart';
+import 'package:sari_scan/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

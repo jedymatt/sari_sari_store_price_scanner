@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sari_sari_store_price_scanner/add_product_barcode_page.dart';
+import 'package:sari_scan/add_product_barcode_page.dart';
 
 import 'add_product_page.dart';
 
@@ -32,7 +32,8 @@ class ManageProductsPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddProductBarcodePage()),
+                MaterialPageRoute(
+                    builder: (context) => const AddProductBarcodePage()),
               );
             },
           ),

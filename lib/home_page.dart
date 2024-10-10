@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sari_sari_store_price_scanner/camera_page.dart';
-import 'package:sari_sari_store_price_scanner/manage_products_page.dart';
+import 'package:sari_scan/camera_page.dart';
+import 'package:sari_scan/manage_products_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

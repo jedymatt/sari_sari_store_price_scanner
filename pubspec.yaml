@@ -1,4 +1,4 @@
-name: sari_sari_store_price_scanner
+name: sari_scan
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^6.0.0
   shared_preferences: ^2.2.3
 
 dev_dependencies:
