@@ -22,8 +22,10 @@ dev_dependencies:
 
   flutter_lints: ^3.0.1
 
-assets:
-  - assets/icon.png
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/icon.png
+    - assets/icon-transparent.png
