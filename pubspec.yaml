@@ -14,12 +14,16 @@ dependencies:
   cupertino_icons: ^1.0.2
   mobile_scanner: ^6.0.0
   shared_preferences: ^2.2.3
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^3.0.1
+
+assets:
+  - assets/icon.png
 
 flutter:
   uses-material-design: true
