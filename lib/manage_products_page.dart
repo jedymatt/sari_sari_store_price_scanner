@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:sari_scan/add_product_barcode_page.dart';
 
-import 'add_product_page.dart';
-
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  const ProductCard(this.product, {super.key});
+
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Product Name'),
+      leading: Image.network(
+        'https://via.placeholder.com/150?text=${product.name}',
+      ),
+      title: Text(
+        product.name,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text('₱ ${product.price}'),
       trailing: IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {},
@@ -23,6 +30,11 @@ class ManageProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Product> products = [
+      Product(name: 'Happy', price: 1, barcode: '1234567890'),
+      Product(name: 'Sky Flakes', price: 8, barcode: '1234567891'),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Products'),
@@ -40,11 +52,19 @@ class ManageProductsPage extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: products.length,
         itemBuilder: (context, index) {
-          return const ProductCard();
+          return ProductCard(products[index]);
         },
       ),
     );
   }
+}
+
+class Product {
+  final String name;
+  final num price;
+  final String barcode;
+
+  Product({required this.name, required this.price, required this.barcode});
 }
