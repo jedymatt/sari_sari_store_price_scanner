@@ -9,7 +9,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/icon-transparent.png',
+              width: 40,
+              height: 40,
+            ),
+            const Text('Sari Scan'),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
@@ -35,6 +44,10 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            const ElevatedButton(
+              onPressed: null,
+              child: Text('Mga Utang (Coming Soon)'),
             ),
           ],
         ),
