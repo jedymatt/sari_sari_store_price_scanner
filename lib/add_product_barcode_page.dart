@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:sari_scan/add_product_details_page.dart';
 
 class AddProductBarcodePage extends StatefulWidget {
   const AddProductBarcodePage({super.key});
@@ -10,7 +11,9 @@ class AddProductBarcodePage extends StatefulWidget {
 }
 
 class _AddProductBarcodePageState extends State<AddProductBarcodePage> {
-  final MobileScannerController controller = MobileScannerController();
+  final MobileScannerController controller = MobileScannerController(
+    returnImage: true,
+  );
 
   Widget _buildBarcodeOverlay() {
     return ValueListenableBuilder(
@@ -118,7 +121,17 @@ class _AddProductBarcodePageState extends State<AddProductBarcodePage> {
                         const SizedBox(height: 8),
                         // Add product button
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            final String? barcode =
+                                snapshot.data?.barcodes.first.displayValue;
+
+                            if (barcode != null) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    AddProductDetailsPage(barcode),
+                              ));
+                            }
+                          },
                           child: const Text('Add Product'),
                         ),
                       ],
