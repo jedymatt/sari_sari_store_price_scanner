@@ -16,3 +16,9 @@ An android mobile application for determining the price of the products from the
 ## Limitations
 
 It relies on barcode and is not for products without barcode such as eggs, onion, garlic, and etc.
+
+## Screenshots
+
+#1 | #2
+:--------:|:------------:
+![image](https://github.com/user-attachments/assets/d6bc85ed-a2f3-421d-b319-e1cbd2dd2823) | ![image](https://github.com/user-attachments/assets/02fd48d1-6c6a-4513-b034-692c8f46c3aa)
