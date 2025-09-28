@@ -13,7 +13,7 @@ class AddProductPage extends StatelessWidget {
             Container(
               width: 100,
               height: 100,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.grey,
               ),
               // child: const Icon(
@@ -25,9 +25,9 @@ class AddProductPage extends StatelessWidget {
               height: 10,
             ),
             ToggleButtons(
-              children: [Text('Capture'), Text('Upload')],
-              isSelected: [false, false],
+              isSelected: const [false, false],
               onPressed: (index) {},
+              children: [Text('Capture'), Text('Upload')],
             ),
             const SizedBox(
               height: 20,
@@ -37,8 +37,8 @@ class AddProductPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextField(
-                    decoration: const InputDecoration(
+                  const TextField(
+                    decoration: InputDecoration(
                       labelText: 'Product Name',
                     ),
                   ),

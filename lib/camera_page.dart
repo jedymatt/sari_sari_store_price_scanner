@@ -1,9 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sari_scan/add_product_barcode_page.dart';
-import 'package:sari_scan/result_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -26,8 +22,8 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: make the price dynamic
-    final productName = 'Coca-Cola 1.5L';
-    final price = 0;
+    const productName = 'Coca-Cola 1.5L';
+    const price = 0;
 
     return Scaffold(
       body: Stack(
@@ -48,14 +44,14 @@ class _CameraPageState extends State<CameraPage> {
                 children: [
                   const Spacer(),
                   Container(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                     padding: const EdgeInsets.all(16),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Text(
                           productName,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -64,7 +60,7 @@ class _CameraPageState extends State<CameraPage> {
                         Text(
                           '₱ $price',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
