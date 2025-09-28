@@ -27,7 +27,7 @@ class AddProductPage extends StatelessWidget {
             ToggleButtons(
               isSelected: const [false, false],
               onPressed: (index) {},
-              children: [Text('Capture'), Text('Upload')],
+              children: const [Text('Capture'), Text('Upload')],
             ),
             const SizedBox(
               height: 20,
