@@ -1,5 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:sari_scan/product_detail_overlay_content.dart';
+
+const data = {
+  '5449000000996': {'name': 'Coca-Cola 1.5L', 'price': 50},
+};
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -11,100 +18,100 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   MobileScannerController cameraController = MobileScannerController(
     facing: CameraFacing.back,
+    autoStart: false, // we will start it manually in initState
   );
+  Barcode? barcode;
+  StreamSubscription<Object?>? _subscription;
+  Timer? _clearTimer;
+
+  @override
+  void initState() {
+    _subscription = cameraController.barcodes.listen(_handleBarcodes);
+
+    super.initState();
+    unawaited(cameraController.start());
+  }
 
   @override
   void dispose() {
+    unawaited(_subscription?.cancel());
+    _subscription = null;
     super.dispose();
     cameraController.dispose();
+    _clearTimer?.cancel();
+  }
+
+  void _handleBarcodes(BarcodeCapture barcodeCapture) {
+    if (barcodeCapture.barcodes.isEmpty) {
+      return;
+    }
+    barcode = barcodeCapture.barcodes.first;
+
+    _clearTimer?.cancel();
+    _clearTimer = Timer(const Duration(seconds: 1), () {
+      setState(() {
+        barcode = null;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: make the price dynamic
-    const productName = 'Coca-Cola 1.5L';
-    const price = 0;
-
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          MobileScanner(
-            controller: cameraController,
-            fit: BoxFit.cover,
-            onDetect: (capture) async {
-              final List<Barcode> barcodes = capture.barcodes;
-              for (final barcode in barcodes) {
-                debugPrint('Barcode found! ${barcode.rawValue}');
-              }
-            },
-            // overlay builder product name and price
-            overlayBuilder: (context, controller) {
-              return Column(
-                children: [
-                  const Spacer(),
-                  Container(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    padding: const EdgeInsets.all(16),
-                    child: const Column(
+      body: MobileScanner(
+        controller: cameraController,
+        fit: BoxFit.cover,
+        // overlay builder product name and price
+        overlayBuilder: (context, controller) {
+          return Column(
+            children: [
+              const Spacer(),
+              StreamBuilder<BarcodeCapture>(
+                stream: cameraController.barcodes,
+                builder: (context, snapshot) {
+                  if (barcode == null) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final code = barcode!.rawValue ?? '---';
+                  final product = data[code];
+                  if (product == null) {
+                    // No product found
+                    // Register?
+                    return Column(
                       children: [
-                        Text(
-                          productName,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                        Container(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          padding: const EdgeInsets.all(16),
+                          child: const Text(
+                            'Product not found',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                        Text(
-                          '₱ $price',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        const SizedBox(height: 4),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Register Product'),
                         ),
+                        const SizedBox(height: 24),
                       ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-          // Positioned(
-          //   left: 0,
-          //   right: 0,
-          //   bottom: 0,
-          //   child: Container(
-          //     color: Colors.black.withOpacity(0.4),
-          //     padding: const EdgeInsets.all(16),
-          //     child: Column(
-          //       children: [
-          //         Text(
-          //           productName,
-          //           textAlign: TextAlign.center,
-          //           style: const TextStyle(
-          //             color: Colors.white,
-          //             fontSize: 18,
-          //             fontWeight: FontWeight.w500,
-          //           ),
-          //         ),
-          //         Text(
-          //           '₱ $price',
-          //           textAlign: TextAlign.center,
-          //           style: const TextStyle(
-          //             color: Colors.white,
-          //             fontSize: 24,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // )
-        ],
+                    );
+                  }
+
+                  return ProductDetailOverlayContent(
+                    productName: product['name'] as String,
+                    price: product['price'] as int,
+                  );
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }
