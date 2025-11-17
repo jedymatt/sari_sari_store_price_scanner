@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:sari_scan/data.dart';
 import 'package:sari_scan/product_detail_overlay_content.dart';
-
-const data = {
-  '5449000000996': {'name': 'Coca-Cola 1.5L', 'price': 50},
-};
+import 'package:sari_scan/register_product_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -57,23 +55,46 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    late final scanWindow = Rect.fromCenter(
+      center: MediaQuery.sizeOf(context).center(const Offset(0, -100)),
+      width: MediaQuery.sizeOf(context).width,
+      height: 400,
+    );
+
     return Scaffold(
-      body: MobileScanner(
-        controller: cameraController,
-        fit: BoxFit.cover,
-        // overlay builder product name and price
-        overlayBuilder: (context, controller) {
-          return Column(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          MobileScanner(
+            controller: cameraController,
+            fit: BoxFit.cover,
+            scanWindow: scanWindow,
+            // rectangle scan window designed for barcode scanning
+            // scanWindow: Rect.fromCenter(
+            //   center: MediaQuery.of(context).size.center(Offset.zero),
+            //   width: 250,
+            //   height: 100,
+            // ),
+          ),
+          ScanWindowOverlay(
+            controller: cameraController,
+            scanWindow: scanWindow,
+          ),
+          BarcodeOverlay(
+            boxFit: BoxFit.cover,
+            controller: cameraController,
+          ),
+          Column(
             children: [
               const Spacer(),
               StreamBuilder<BarcodeCapture>(
                 stream: cameraController.barcodes,
                 builder: (context, snapshot) {
-                  if (barcode == null) {
+                  final code = barcode?.rawValue;
+                  if (code == null) {
                     return const SizedBox.shrink();
                   }
 
-                  final code = barcode!.rawValue ?? '---';
                   final product = data[code];
                   if (product == null) {
                     // No product found
@@ -95,7 +116,20 @@ class _CameraPageState extends State<CameraPage> {
                         ),
                         const SizedBox(height: 4),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // Navigate to add_product_page.dart
+                            cameraController.stop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterProductPage(
+                                  barcode: code,
+                                  format: barcode!.format,
+                                ),
+                              ),
+                            );
+                            cameraController.start();
+                          },
                           child: const Text('Register Product'),
                         ),
                         const SizedBox(height: 24),
@@ -110,8 +144,8 @@ class _CameraPageState extends State<CameraPage> {
                 },
               ),
             ],
-          );
-        },
+          )
+        ],
       ),
     );
   }

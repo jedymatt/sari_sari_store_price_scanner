@@ -16,6 +16,7 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_launcher_icons: ^0.14.1
   intl: ^0.20.2
+  barcode_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:
