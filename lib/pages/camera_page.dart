@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sari_scan/data.dart';
-import 'package:sari_scan/product_detail_overlay_content.dart';
-import 'package:sari_scan/register_product_page.dart';
+import 'package:sari_scan/core/data.dart';
+import 'package:sari_scan/components/product_detail_overlay_content.dart';
+import 'package:sari_scan/pages/product_management/register_product_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});

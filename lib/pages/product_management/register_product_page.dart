@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide Barcode;
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:sari_scan/data.dart';
-import 'package:sari_scan/mobile_scanner_format_to_barcode_widget.dart';
+import 'package:sari_scan/core/data.dart';
+import 'package:sari_scan/core/mobile_scanner_format_to_barcode_widget.dart';
 
 class RegisterProductPage extends StatefulWidget {
   const RegisterProductPage({

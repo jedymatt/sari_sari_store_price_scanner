@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sari_scan/add_product_details_page.dart';
+import 'package:sari_scan/pages/product_management/add_product_details_page.dart';
 
 class AddProductBarcodePage extends StatefulWidget {
   const AddProductBarcodePage({super.key});
