@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sari_scan/add_product_barcode_page.dart';
 import 'package:sari_scan/camera_page.dart';
 import 'package:sari_scan/data.dart';
 
