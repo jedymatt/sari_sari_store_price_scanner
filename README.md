@@ -16,11 +16,29 @@ An android mobile application for determining the price of the products from the
 ## Build Instructions
 
 ### Prerequisites
-- Flutter SDK (version 3.2.3 or higher)
+- Flutter SDK (minimum version 3.2.3 as specified in pubspec.yaml)
 - Java Development Kit (JDK) 11 or higher
 - Android SDK
 
+**Note:** The GitHub Actions workflow uses Flutter 3.24.5 for consistent automated builds.
+
 ### Building the APK
+
+#### Using the Build Script (Recommended)
+
+The easiest way to build the APK is to use the provided build script:
+
+```bash
+./build-apk.sh
+```
+
+This script will:
+- Check if Flutter is installed
+- Install dependencies
+- Clean previous builds
+- Build both debug and release APKs (if signing is configured)
+
+#### Manual Build
 
 1. **Install dependencies:**
    ```bash

@@ -44,10 +44,19 @@ jobs:
         path: build/app/outputs/flutter-apk/app-debug.apk
         retention-days: 30
     
+    - name: Check if release APKs exist
+      id: check_release
+      run: |
+        if ls build/app/outputs/flutter-apk/app-*-release.apk 1> /dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+    
     - name: Upload Release APK (if built successfully)
       uses: actions/upload-artifact@v4
-      if: success()
+      if: steps.check_release.outputs.exists == 'true'
       with:
         name: app-release-apks
-        path: build/app/outputs/flutter-apk/*.apk
+        path: build/app/outputs/flutter-apk/*-release.apk
         retention-days: 30
