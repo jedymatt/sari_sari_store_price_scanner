@@ -13,6 +13,61 @@ An android mobile application for determining the price of the products from the
 - [ ] Export and import file for backup and restore data.
 - [ ] (Optional and is only for convenience) Standalone static website for managing the products and prices, without backend. Utilizes import and export file. The exported file will be used to import in android application. 
 
+## Build Instructions
+
+### Prerequisites
+- Flutter SDK (version 3.2.3 or higher)
+- Java Development Kit (JDK) 11 or higher
+- Android SDK
+
+### Building the APK
+
+1. **Install dependencies:**
+   ```bash
+   flutter pub get
+   ```
+
+2. **Build the release APK:**
+   ```bash
+   flutter build apk --release
+   ```
+
+   The APK file will be generated at: `build/app/outputs/flutter-apk/app-release.apk`
+   
+   **Note:** Release builds require a signing key. To build without signing, use the debug build instead.
+
+3. **Build debug APK (for testing):**
+   ```bash
+   flutter build apk --debug
+   ```
+
+### APK Signing Configuration
+
+For release builds, you need to set up signing:
+
+1. Create a keystore file:
+   ```bash
+   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+
+2. Create a `key.properties` file in the `android` directory:
+   ```properties
+   storePassword=<your_store_password>
+   keyPassword=<your_key_password>
+   keyAlias=upload
+   storeFile=<path_to_keystore>/upload-keystore.jks
+   ```
+
+3. Ensure `key.properties` is listed in `.gitignore` to avoid committing sensitive data.
+
+### Automated Builds
+
+This repository includes a GitHub Actions workflow that automatically builds the APK on every push to the main/master branch. You can download the built APK from the Actions tab:
+
+1. Go to the "Actions" tab in the GitHub repository
+2. Click on the latest "Build APK" workflow run
+3. Download the `app-release` artifact
+
 ## Limitations
 
 It relies on barcode and is not for products without barcode such as eggs, onion, garlic, and etc.
