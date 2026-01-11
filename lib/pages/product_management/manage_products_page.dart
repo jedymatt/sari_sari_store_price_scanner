@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/db.dart';
+import 'package:sari_scan/models.dart';
 import 'package:sari_scan/pages/camera_page.dart';
-import 'package:sari_scan/core/data.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard(this.product, {super.key});
@@ -34,9 +35,6 @@ class ManageProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products =
-        data.values.map((productMap) => Product.fromMap(productMap)).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Products'),
@@ -52,28 +50,26 @@ class ManageProductsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ProductCard(products[index]);
-        },
-      ),
-    );
-  }
-}
+      body: FutureBuilder(
+          future: queryProducts(),
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-class Product {
-  final String name;
-  final num price;
-  final String barcode;
+            final products = asyncSnapshot.data ?? [];
 
-  Product({required this.name, required this.price, required this.barcode});
+            if (products.isEmpty) {
+              return const Center(child: Text('No products found.'));
+            }
 
-  static Product fromMap(Map<String, dynamic> map) {
-    return Product(
-      name: map['name'] as String,
-      price: map['price'] as num,
-      barcode: map['barcode'] as String,
+            return ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return ProductCard(products[index]);
+              },
+            );
+          }),
     );
   }
 }

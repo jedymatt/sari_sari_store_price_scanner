@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide Barcode;
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:sari_scan/core/data.dart';
+// import 'package:sari_scan/core/data.dart';
 import 'package:sari_scan/core/mobile_scanner_format_to_barcode_widget.dart';
+import 'package:sari_scan/db.dart';
+import 'package:sari_scan/models.dart';
 
 class RegisterProductPage extends StatefulWidget {
   const RegisterProductPage({
@@ -19,7 +21,6 @@ class RegisterProductPage extends StatefulWidget {
 
 class _RegisterProductPageState extends State<RegisterProductPage> {
   String name = '';
-  String description = '';
   num price = 0;
 
   @override
@@ -49,16 +50,6 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           ),
           TextField(
             decoration: const InputDecoration(
-              labelText: 'Product Description',
-            ),
-            onChanged: (value) {
-              setState(() {
-                description = value;
-              });
-            },
-          ),
-          TextField(
-            decoration: const InputDecoration(
               labelText: 'Product Price',
             ),
             keyboardType: TextInputType.number,
@@ -69,16 +60,18 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             },
           ),
           ElevatedButton(
-            onPressed: () {
-              // Save product
-              data[widget.barcode] = {
-                'name': name,
-                'description': description,
-                'price': price,
-                'barcode': widget.barcode,
-              };
+            onPressed: () async {
+              await insertProduct(Product(
+                name: name,
+                price: price,
+                barcode: widget.barcode,
+              ));
 
-              Navigator.pop(context);
+              if (!mounted) return;
+
+              Navigator.of(context)
+                ..pop()
+                ..pop();
             },
             child: const Text('Save Product'),
           ),

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sari_scan/core/data.dart';
 import 'package:sari_scan/components/product_detail_overlay_content.dart';
+import 'package:sari_scan/db.dart';
 import 'package:sari_scan/pages/product_management/register_product_page.dart';
 
 class CameraPage extends StatefulWidget {
@@ -87,62 +87,69 @@ class _CameraPageState extends State<CameraPage> {
           Column(
             children: [
               const Spacer(),
-              StreamBuilder<BarcodeCapture>(
-                stream: cameraController.barcodes,
-                builder: (context, snapshot) {
-                  final code = barcode?.rawValue;
-                  if (code == null) {
-                    return const SizedBox.shrink();
-                  }
+              FutureBuilder(
+                  future: queryProducts(),
+                  builder: (context, asyncSnapshot) {
+                    final data = asyncSnapshot.data ?? [];
 
-                  final product = data[code];
-                  if (product == null) {
-                    // No product found
-                    // Register?
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.black.withValues(alpha: 0.4),
-                          padding: const EdgeInsets.all(16),
-                          child: const Text(
-                            'Product not found',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to add_product_page.dart
-                            cameraController.stop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterProductPage(
-                                  barcode: code,
-                                  format: barcode!.format,
+                    return StreamBuilder<BarcodeCapture>(
+                      stream: cameraController.barcodes,
+                      builder: (context, snapshot) {
+                        final code = barcode?.rawValue;
+                        if (code == null) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final product =
+                            data.where((p) => p.barcode == code).firstOrNull;
+                        if (product == null) {
+                          // No product found
+                          // Register?
+                          return Column(
+                            children: [
+                              Container(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                padding: const EdgeInsets.all(16),
+                                child: const Text(
+                                  'Product not found',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                            );
-                            cameraController.start();
-                          },
-                          child: const Text('Register Product'),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                    );
-                  }
+                              const SizedBox(height: 4),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Navigate to add_product_page.dart
+                                  cameraController.stop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegisterProductPage(
+                                        barcode: code,
+                                        format: barcode!.format,
+                                      ),
+                                    ),
+                                  );
+                                  cameraController.start();
+                                },
+                                child: const Text('Register Product'),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        }
 
-                  return ProductDetailOverlayContent(
-                    productName: product['name'] as String,
-                    price: product['price'] as int,
-                  );
-                },
-              ),
+                        return ProductDetailOverlayContent(
+                          productName: product.name,
+                          price: product.price,
+                        );
+                      },
+                    );
+                  }),
             ],
           )
         ],

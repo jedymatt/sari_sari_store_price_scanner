@@ -14,7 +14,7 @@ class ProductDetailOverlayContent extends StatelessWidget {
   });
 
   final String productName;
-  final int price;
+  final num price;
 
   @override
   Widget build(BuildContext context) {
