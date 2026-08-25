@@ -33,21 +33,27 @@ Future<void> purgeTrashAtStartup() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  /// Reads the settings and subscribes [context] to them, so callers rebuild
+  /// even when the change leaves the resolved theme/locale identical (System
+  /// default -> English on an English device).
+  static _AppSettingsScope _watch(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_AppSettingsScope>()!;
+
+  /// Reaches the settings without subscribing, for use inside callbacks.
+  static _AppSettingsScope _read(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_AppSettingsScope>()!;
+
   static void setThemeMode(BuildContext context, ThemeMode mode) {
-    context.findAncestorStateOfType<_MyAppState>()!._setThemeMode(mode);
+    _read(context).state._setThemeMode(mode);
   }
 
-  static ThemeMode themeMode(BuildContext context) {
-    return context.findAncestorStateOfType<_MyAppState>()!._themeMode;
-  }
+  static ThemeMode themeMode(BuildContext context) => _watch(context).themeMode;
 
   static void setLocale(BuildContext context, Locale? locale) {
-    context.findAncestorStateOfType<_MyAppState>()!._setLocale(locale);
+    _read(context).state._setLocale(locale);
   }
 
-  static Locale? locale(BuildContext context) {
-    return context.findAncestorStateOfType<_MyAppState>()!._locale;
-  }
+  static Locale? locale(BuildContext context) => _watch(context).locale;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -108,40 +114,67 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        _CebuanoMaterialLocalizationsDelegate(),
-        _CebuanoCupertinoLocalizationsDelegate(),
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ceb'),
-      ],
-      locale: _locale,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF8C42),
-          secondary: const Color(0xFFFFA726),
-          surface: const Color(0xFFFFFBF5),
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF8C42),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+    return _AppSettingsScope(
       themeMode: _themeMode,
-      home: const HomePage(),
+      locale: _locale,
+      state: this,
+      child: MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          _CebuanoMaterialLocalizationsDelegate(),
+          _CebuanoCupertinoLocalizationsDelegate(),
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('ceb'),
+        ],
+        locale: _locale,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFFFF8C42),
+            secondary: const Color(0xFFFFA726),
+            surface: const Color(0xFFFFFBF5),
+          ),
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFFFF8C42),
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+        ),
+        themeMode: _themeMode,
+        home: const HomePage(),
+      ),
     );
   }
+}
+
+/// Carries the app-level theme mode and locale down the tree.
+///
+/// This exists so reading the settings creates a real dependency. The previous
+/// `findAncestorStateOfType` lookup returned the value without subscribing, so
+/// a page could hold a stale copy indefinitely.
+class _AppSettingsScope extends InheritedWidget {
+  const _AppSettingsScope({
+    required this.themeMode,
+    required this.locale,
+    required this.state,
+    required super.child,
+  });
+
+  final ThemeMode themeMode;
+  final Locale? locale;
+  final _MyAppState state;
+
+  @override
+  bool updateShouldNotify(_AppSettingsScope old) =>
+      themeMode != old.themeMode || locale != old.locale;
 }
 
 // Custom delegate to provide English fallback for Material widgets in Cebuano
