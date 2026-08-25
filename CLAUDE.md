@@ -29,8 +29,9 @@ dart run build_runner watch
 # Run on connected device/emulator
 flutter run
 
-# Build release APK (uses signing config in android/key.properties)
+# Build signed release artifacts (see Release Signing below)
 flutter build apk --release
+flutter build appbundle --release
 
 # Run tests
 flutter test
@@ -44,6 +45,14 @@ flutter analyze
 # Format code
 dart format lib/
 ```
+
+## Release Signing
+
+Release builds are signed with the upload key, not the debug key. `android/app/build.gradle.kts` loads `android/key.properties` and wires it to the `release` build type, following the [Flutter Android deployment guide](https://docs.flutter.dev/deployment/android#sign-the-app).
+
+Both `key.properties` and the keystore it names are gitignored, so **a fresh clone cannot build release variants**. Without `key.properties`, Gradle fails at *configuration* time — before any task runs, so even `flutter run` breaks. That is deliberate: it makes a silently debug-signed release impossible, at the cost of needing the secret present for any release build (including in CI).
+
+`storeFile` is a path relative to the `:app` module directory (`android/app/`), so the keystore at `android/upload-keystore.jks` is referenced as `../upload-keystore.jks`. Prefer a relative path — an absolute one goes stale if the project directory moves.
 
 ## Architecture
 
